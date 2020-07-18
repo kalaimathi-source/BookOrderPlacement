@@ -1,5 +1,6 @@
 package com.book.controller;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,23 @@ class BookHoldingController {
 	@Autowired
 	PlacingOnHold service;
 
+	/**
+	 * Books displayed with status by Id.
+	 */
 	@RequestMapping("/api/books/{bookId}")
 	public Book getBooksById(@PathVariable int bookId) {
 		return service.getBooksById(bookId);
 	}
+	/**
+	 * getBooks is used to display all the stored books.
+	 */
+	@RequestMapping("/api/books")
+	public List<Book> getBooks() {
+		return service.getAllBooks();
+	}
+	/**
+	 * updateBookStatus is used to place order on books.
+	 */
 	@RequestMapping(method = RequestMethod.PUT,value = "/api/updateBookStatus")
 	public ResponseEntity<?> updateBookStatus( @RequestBody Book book){
 			String result = service.updateBookStatus(book);
@@ -34,6 +48,9 @@ class BookHoldingController {
 	            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
 			}
 	}
+	/**
+	 * storeBooks is used to create books.
+	 */
 	@RequestMapping(method = RequestMethod.POST,value = "/api/storeBooks")
 	public void storeBooks(@RequestBody Book book) {
 		service.storeBooks(book);

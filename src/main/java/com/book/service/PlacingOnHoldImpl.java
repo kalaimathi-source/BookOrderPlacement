@@ -1,5 +1,8 @@
 package com.book.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +40,17 @@ public class PlacingOnHoldImpl implements PlacingOnHold{
 		return msg;
 	}
 	@Override
+	public List<Book> getAllBooks() {
+		List<Book> returnValue = new ArrayList<>();
+		Iterable<Book> iteratableObjects = repository.findAll();
+		for (Book book : iteratableObjects) {
+				returnValue.add(book);
+		}
+		return returnValue;
+	}
+	@Override
 	public void storeBooks(Book book) {
 		book.setStatus("AVAILABLE");
 		repository.save(book);
 	}
-	
 }
