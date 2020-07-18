@@ -2,6 +2,7 @@ package com.book.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,15 +23,16 @@ class BookHoldingController {
 	public Book getBooksById(@PathVariable int bookId) {
 		return service.getBooksById(bookId);
 	}
-	@RequestMapping(method = RequestMethod.PUT,value = "/api/updateBookStatus/{id}")
-	public ResponseEntity<?> updateBookStatus(@PathVariable int id, @RequestBody Book book){
-		if ("PLACE_ON_HOLD".equals(book.getStatus())) {
-			String result = service.updateBookStatus(id);
-			return ResponseEntity.ok().build(); 
-
-		} else {
-			return ResponseEntity.ok().build(); 
-		}
+	@RequestMapping(method = RequestMethod.PUT,value = "/api/updateBookStatus")
+	public ResponseEntity<?> updateBookStatus( @RequestBody Book book){
+			String result = service.updateBookStatus(book);
+			if(result.equals("BookPlacedOnHold")) {
+				return ResponseEntity.ok().build(); 
+			}else if(result.equals("BookNotFound")) {
+				return ResponseEntity.notFound().build(); 
+			}else {
+	            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+			}
 	}
 	@RequestMapping(method = RequestMethod.POST,value = "/api/storeBooks")
 	public void storeBooks(@RequestBody Book book) {

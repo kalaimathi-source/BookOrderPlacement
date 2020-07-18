@@ -6,9 +6,8 @@ public interface PlacingOnHold {
 
 	public Book getBooksById(int bookId);
 	
-	public String updateBookStatus(
-			int bookId);
+	public String updateBookStatus(Book book);
 	
-	public void storeBooks(
-			Book book);
+	public void storeBooks(Book book);
+
 }

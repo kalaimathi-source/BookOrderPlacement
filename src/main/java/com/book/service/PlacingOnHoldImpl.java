@@ -17,24 +17,29 @@ public class PlacingOnHoldImpl implements PlacingOnHold{
 		return repository.findByBookId(bookId);
 	}
 	@Override
-	public String updateBookStatus(int bookId) {
-		Book bookbyId = repository.findByBookId(bookId);
+	public String updateBookStatus(Book book) {
+		String msg ="";
+		Book bookbyId = repository.findByBookId(book.getBookId());
 		if(bookbyId==null) {
-			return "BookNotFound";
+			msg= "BookNotFound";
 		}
 		else if(bookbyId.getStatus().equals("AVAILABLE")) {
 			bookbyId.setStatus("PLACE_ON_HOLD");
 			repository.save(bookbyId);
-			return "BookPlacedOnHold";
+			msg= "BookPlacedOnHold";
 		}else {
-			return "BookConflictIdentified";
+			try {
+				repository.save(book);
+			}catch(Exception e) {
+				msg= "BookConflictIdentified";
+			}
 		}
-
-
-
+		return msg;
 	}
+	@Override
 	public void storeBooks(Book book) {
 		book.setStatus("AVAILABLE");
 		repository.save(book);
 	}
+	
 }
